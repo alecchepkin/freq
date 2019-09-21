@@ -65,8 +65,8 @@ func main() {
 	defer func() { fmt.Printf("time execution:%v", time.Now().Sub(start)) }()
 
 	it := newIterator(file)
-	//counter := freq.NewSliceCounter()
-	counter := freq.NewFileCounter()
+	counter := freq.NewSliceCounter()
+	//counter := freq.NewFileCounter()
 
 	counter.ReadAll(it)
 
