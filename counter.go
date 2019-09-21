@@ -2,6 +2,7 @@ package freq
 
 import (
 	"freq/list"
+	"log"
 	"regexp"
 	"strings"
 )
@@ -11,7 +12,6 @@ type Iterator interface {
 }
 
 type Counter struct {
-	//slice []*word
 	list list.List
 }
 
@@ -28,7 +28,6 @@ func NewFileCounter() *Counter {
 }
 
 func (c *Counter) ReadAll(it Iterator) {
-
 	for {
 		row, err := it.Next()
 		if err != nil {
@@ -36,8 +35,14 @@ func (c *Counter) ReadAll(it Iterator) {
 		}
 		for _, s := range strings.Fields(row) {
 			s = strings.ToLower(s)
-			r := regexp.MustCompile("[a-zA-z]*")
-			s := r.FindString(s)
+			r, err := regexp.Compile("[^a-zA-Z]")
+			if err != nil {
+				log.Fatal(err)
+			}
+			s = r.ReplaceAllString(s, "")
+			if len(s) == 0 {
+				continue
+			}
 			c.list.Insert(s)
 		}
 	}

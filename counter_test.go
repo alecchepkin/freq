@@ -35,7 +35,8 @@ func TestCounter_Frequency(t *testing.T) {
 		{"Simple", []string{"a"}, []list.Item{{"a", 1}}},
 		{"should separate words", []string{"abc bcd"}, []list.Item{{"abc", 1}, {"bcd", 1}}},
 		{"case insensitive", []string{"AbC"}, []list.Item{{"abc", 1}}},
-		{"only letters", []string{"a!"}, []list.Item{{"a", 1}}},
+		{"only letters", []string{"a!]"}, []list.Item{{"a", 1}}},
+		{"empty if no letters", []string{"{!]}_,)("}, []list.Item{}},
 	}
 	for _, tt := range tests {
 		c := NewSliceCounter()
