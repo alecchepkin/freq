@@ -1,9 +1,5 @@
 package list
 
-import (
-	"sync"
-)
-
 var _ List = (*Slice)(nil)
 
 type Slice struct {
@@ -11,7 +7,7 @@ type Slice struct {
 }
 
 func (s *Slice) Frequency(n uint) []Item {
-	items := s.sortDesc(s.items)
+	items := s.sort(s.items)
 
 	r := make([]Item, 0)
 	for i, item := range items {
@@ -21,31 +17,6 @@ func (s *Slice) Frequency(n uint) []Item {
 		r = append(r, *item)
 	}
 	return r
-}
-
-func (s Slice) sortDesc(items []*Item) []*Item {
-	l := len(items)
-
-	if l == 0 {
-		return items
-	}
-	pivot := items[0]
-
-	left := make([]*Item, 0)
-	right := make([]*Item, 0)
-	for i := 1; i < l; i++ {
-		if items[i].Count > pivot.Count {
-			left = append(left, items[i])
-			continue
-		}
-		right = append(right, items[i])
-	}
-	left = s.sortDesc(left)
-	right = s.sortDesc(right)
-	left = append(left, pivot)
-	left = append(left, right...)
-
-	return left
 }
 
 func (s Slice) sort(items []*Item) []*Item {
@@ -65,19 +36,8 @@ func (s Slice) sort(items []*Item) []*Item {
 		}
 		right = append(right, items[i])
 	}
-	var wg sync.WaitGroup
-	wg.Add(2)
-
-	go func() {
-		left = s.sort(left)
-		wg.Done()
-	}()
-	go func() {
-		right = s.sort(right)
-		wg.Done()
-	}()
-	wg.Wait()
-
+	left = s.sort(left)
+	right = s.sort(right)
 	left = append(left, pivot)
 	left = append(left, right...)
 

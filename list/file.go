@@ -67,7 +67,7 @@ func (f *File) Insert(s string) Item {
 	return *item
 }
 
-func (f *File) check(err error) {
+func (File) check(err error) {
 	if err != nil {
 		panic(err)
 	}
@@ -94,7 +94,8 @@ func (f *File) nextMax(res []Item) Item {
 	scanner := bufio.NewScanner(ff)
 	for scanner.Scan() {
 		data := scanner.Bytes()
-		_ = json.Unmarshal(data, &item)
+		err := json.Unmarshal(data, &item)
+		f.check(err)
 		if item.Count >= max.Count && !f.hasInRes(res, item.Name) {
 			max = item
 		}

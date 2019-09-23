@@ -65,7 +65,11 @@ func main() {
 	defer func() { fmt.Printf("time execution:%v", time.Now().Sub(start)) }()
 
 	it := newIterator(file)
+
+	/* SliceCounter use slice list for stat*/
 	counter := freq.NewSliceCounter()
+
+	/* FileCounter - save stat in the files */
 	//counter := freq.NewFileCounter()
 
 	counter.ReadAll(it)
